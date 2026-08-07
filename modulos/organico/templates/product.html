@@ -1,0 +1,113 @@
+
+{% extends "base.html" %}
+{% block title %}{{ product.title }} - Ofertas verificadas{% endblock %}
+{% block description %}{{ product.comparison_text }}{% endblock %}
+
+{% block content %}
+    <div class="breadcrumb"><a href="/">Inicio</a> / {{ product.category }}</div>
+    
+    <div class="product-detail-grid">
+        <!-- COLUMNA IZQUIERDA: GALERÍA -->
+        <div class="gallery">
+            <div class="gallery-slide" id="mainSlide">
+                <img src="{{ product.image_url }}" alt="{{ product.title }}" id="mainImage">
+            </div>
+            <div class="gallery-thumbs">
+                <img src="{{ product.image_url }}" alt="Imagen 1" class="active" onclick="changeSlide(this, 'image')">
+                {% if product.video_url %}
+                <div class="thumb-video" onclick="changeSlide(this, 'video')">▶</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: INFORMACIÓN -->
+        <div class="product-info">
+            <h1>{{ product.title }}</h1>
+            
+            <div class="rating-row">
+                <span class="stars">⭐ {{ product.rating }}</span>
+                <span>·</span>
+                <span>{{ product.sales }} ventas</span>
+                <span style="color: var(--mp-blue); font-size: 0.85rem;">✅ Comprador verificado</span>
+            </div>
+
+            <div class="price-box">
+                <span class="current-price">{{ product.price_formatted }}</span>
+                <span class="original-price">{{ product.original_price_formatted }}</span>
+                <span class="discount-tag">-{{ product.discount_percent }}%</span>
+            </div>
+
+            <div class="delivery-box">
+                <span style="font-size: 1.5rem;">🚚</span>
+                <div class="text">
+                    <strong>Envío Internacional Gratuito</strong><br>
+                    Recíbelo en tu domicilio entre el <strong>{{ delivery_min }}</strong> y el <strong>{{ delivery_max }}</strong>
+                </div>
+            </div>
+
+            <!-- TESTIMONIOS -->
+            <div class="testimonials">
+                <h3 style="font-size: 1rem; margin-bottom: 8px;">📝 Lo que dicen nuestros compradores</h3>
+                {% for t in testimonios %}
+                <div class="testimonial">
+                    "{{ t.texto }}"
+                    <span class="author">{{ t.autor }} · <span style="color: var(--mp-blue);">Comprador Verificado</span></span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="guarantee-box">
+                <span style="font-size: 1.5rem;">🛡️</span>
+                <div>
+                    <strong>Garantía de Cero Riesgos por 30 Días</strong><br>
+                    Si el producto llega dañado o no cumple lo mostrado, gestionamos tu reembolso total.
+                </div>
+            </div>
+
+            <div class="payment-methods">
+                <span class="payment-badge secure">🔒 Pago seguro</span>
+                <span class="payment-badge visa">💳 Visa</span>
+                <span class="payment-badge mastercard">💳 Mastercard</span>
+                <span class="payment-badge oxxo">🏪 OXXO</span>
+                <span class="payment-badge mercadopago">💙 Mercado Pago</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para cambiar entre imagen y video -->
+    <script>
+        function changeSlide(element, type) {
+            var mainSlide = document.getElementById('mainSlide');
+            var mainImage = document.getElementById('mainImage');
+            var thumbs = document.querySelectorAll('.gallery-thumbs img, .gallery-thumbs .thumb-video');
+            thumbs.forEach(function(t) { t.classList.remove('active'); });
+            element.classList.add('active');
+
+            if (type === 'image') {
+                // Mostrar imagen estática
+                mainSlide.innerHTML = '<img src="{{ product.image_url }}" alt="{{ product.title }}" style="width:100%;height:100%;object-fit:contain;">';
+            } else if (type === 'video') {
+                // Mostrar video con controles, sin autoplay, precargando metadata
+                var videoHTML = '<video controls preload="metadata" style="width:100%;height:100%;object-fit:contain;background:#000;" poster="{{ product.image_url }}">';
+                videoHTML += '<source src="{{ product.video_url }}" type="video/mp4">';
+                videoHTML += '<img src="{{ product.image_url }}" alt="{{ product.title }}">';
+                videoHTML += '</video>';
+                mainSlide.innerHTML = videoHTML;
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block sticky_cta %}
+    <div class="sticky-cta">
+        <div class="sticky-cta-inner">
+            <a href="/checkout?id={{ product.id }}" class="btn-primary">
+                🔒 Pagar seguro con Mercado Pago
+            </a>
+            <div class="cta-trust-badges">
+                <span class="secure-text">✅ Tus datos no se almacenan aquí</span>
+                <span class="speed-text">⏱️ Pago rápido y sin complicaciones</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

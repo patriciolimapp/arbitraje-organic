@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Archivos grandes o generados (NO el JSON)
+sitio/
+data/videos_crudos/
+data/videos_procesados/
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.log
+logs/
+captura_*.png
+
+# Archivos de entorno
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
